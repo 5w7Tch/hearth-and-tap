@@ -93,6 +93,7 @@ export const ServiceListSchema = z
       }),
     ),
     safetyNotice: z.string().describe('Show this to the customer if they mention gas or carbon monoxide. Never book those.'),
+    pricingNote: z.string().describe('Applies to every service: show it once alongside the price list'),
   })
   .openapi('ServiceList') satisfies z.ZodType<ServiceList>;
 

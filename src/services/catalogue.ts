@@ -11,7 +11,11 @@ export type ServiceList = {
     pricingBasis: string;
   }>;
   safetyNotice: string;
+  /** Applies to every service; shown once rather than under each one. */
+  pricingNote: string;
 }
+
+const PRICING_NOTE = 'All prices include VAT. Saturdays, evenings, Sundays, bank holidays and emergencies cost more.';
 
 /** VAT-inclusive pounds for customers, e.g. 7500 -> "£90". UK consumer prices must include VAT. */
 const poundsIncVat = (pence: number) => {
@@ -23,8 +27,7 @@ function describePricing(pricing: JobPricing): string {
   if (pricing.kind === 'fixed') return `Fixed price ${poundsIncVat(pricing.fixedPence)} incl. VAT.`;
   return (
     `${poundsIncVat(CALLOUT_PENCE)} call-out (covers the first hour), then ${poundsIncVat(EXTRA_HOUR_PENCE)} per extra hour. ` +
-    `Usually ${pricing.minHours}–${pricing.maxHours} hours; parts about ${poundsIncVat(pricing.partsMinPence)}–${poundsIncVat(pricing.partsMaxPence)}. ` +
-    'All prices include VAT. Saturdays, evenings, Sundays, bank holidays and emergencies cost more.'
+    `Usually ${pricing.minHours}–${pricing.maxHours} hours; parts about ${poundsIncVat(pricing.partsMinPence)}–${poundsIncVat(pricing.partsMaxPence)}.`
   );
 }
 
@@ -38,5 +41,5 @@ const toService = (job: Job): ServiceList['services'][number] => ({
 });
 
 export function listServices(): ServiceList {
-  return { services: JOBS.map(toService), safetyNotice: GAS_EMERGENCY_NOTICE };
+  return { services: JOBS.map(toService), safetyNotice: GAS_EMERGENCY_NOTICE, pricingNote: PRICING_NOTE };
 }

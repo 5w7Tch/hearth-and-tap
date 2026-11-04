@@ -19,13 +19,15 @@ describe('GET /api/v1/services', () => {
   it('lists the 9 jobs and the gas safety notice', async () => {
     const res = await setup().app.request('/api/v1/services');
     expect(res.status).toBe(200);
-    const body = (await res.json()) as { services: Array<{ jobType: string; gasSafeRequired: boolean; pricingBasis: string }>; safetyNotice: string };
+    const body = (await res.json()) as { services: Array<{ jobType: string; gasSafeRequired: boolean; pricingBasis: string }>; safetyNotice: string; pricingNote: string };
     expect(body.services).toHaveLength(9);
     // Customer-facing text shows VAT-inclusive prices (UK consumer pricing), matching what get_quote charges.
     expect(body.services.find((s) => s.jobType === 'boiler_service')).toMatchObject({ gasSafeRequired: true, pricingBasis: 'Fixed price £114 incl. VAT.' });
     const burst = body.services.find((s) => s.jobType === 'burst_pipe')?.pricingBasis;
-    expect(burst).toMatch(/^£90 call-out \(covers the first hour\), then £72 per extra hour\. Usually 1–2\.5 hours; parts about £18–£144\./);
-    expect(burst).toMatch(/All prices include VAT/);
+    expect(burst).toBe('£90 call-out (covers the first hour), then £72 per extra hour. Usually 1–2.5 hours; parts about £18–£144.');
+    // The VAT and surcharge rule is stated once, not repeated under every service.
+    expect(body.pricingNote).toBe('All prices include VAT. Saturdays, evenings, Sundays, bank holidays and emergencies cost more.');
+    expect(body.services.every((s) => !s.pricingBasis.includes('All prices include VAT'))).toBe(true);
     expect(body.services.every((s) => !s.pricingBasis.includes('ex VAT'))).toBe(true);
     expect(body.safetyNotice).toContain('0800 111 999');
   });
