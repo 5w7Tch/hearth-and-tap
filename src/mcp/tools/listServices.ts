@@ -9,7 +9,7 @@ export function registerListServices(server: McpServer, log: (line: string) => v
     {
       title: 'List services',
       description:
-        'List every job Hearth & Tap does, with its jobType id, pricing basis (pence, ex VAT), whether it needs a Gas Safe engineer and whether it can be booked as an emergency. ' +
+        'List every job Hearth & Tap does, with its jobType id, a customer-ready pricingBasis (VAT-inclusive; quote this to customers), whether it needs a Gas Safe engineer and whether it can be booked as an emergency. ' +
         'Call this once at the start to map the customer\'s problem to a jobType. It also returns the gas-emergency safety notice: show it if the customer mentions a gas smell or carbon monoxide, and do not book.',
       outputSchema: ServiceListSchema,
       annotations: { readOnlyHint: true },

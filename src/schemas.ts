@@ -89,7 +89,7 @@ export const ServiceListSchema = z
         gasSafeRequired: z.boolean().describe('True when only a Gas Safe registered engineer can do the job'),
         emergencyEligible: z.boolean().describe('True when urgency = emergency is allowed for this job'),
         pricing: PricingSchema,
-        pricingBasis: z.string().describe('Plain-English pricing, ex VAT'),
+        pricingBasis: z.string().describe('Customer-ready pricing text with VAT-inclusive prices; quote these to customers, not the raw ex-VAT pricing numbers'),
       }),
     ),
     safetyNotice: z.string().describe('Show this to the customer if they mention gas or carbon monoxide. Never book those.'),

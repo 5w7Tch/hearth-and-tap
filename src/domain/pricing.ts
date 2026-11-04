@@ -28,6 +28,11 @@ export const CALLOUT_PENCE = 7500;
 export const EXTRA_HOUR_PENCE = 6000;
 const EMERGENCY_SURCHARGE_PENCE = 4000;
 const VAT_PERCENT = 20;
+/** Adds VAT to an ex-VAT amount in pence, rounding once to the nearest penny. */
+export function withVat(pence: number): number {
+  return Math.round((pence * (100 + VAT_PERCENT)) / 100);
+}
+
 /** Labour multiplier as a whole percentage, so all arithmetic stays in integers. */
 const TIER_PERCENT: Record<Tier, number> = { standard: 100, saturday: 125, out_of_hours: 150 };
 
@@ -69,8 +74,8 @@ export function priceJob({ job, tier, urgency, travelFeePence }: PriceInput): Qu
 
   const subtotalLowPence = lineItems.reduce((sum, i) => sum + i.lowPence, 0);
   const subtotalHighPence = lineItems.reduce((sum, i) => sum + i.highPence, 0);
-  const totalLowPence = Math.round((subtotalLowPence * (100 + VAT_PERCENT)) / 100);
-  const totalHighPence = Math.round((subtotalHighPence * (100 + VAT_PERCENT)) / 100);
+  const totalLowPence = withVat(subtotalLowPence);
+  const totalHighPence = withVat(subtotalHighPence);
 
   return {
     tier,
