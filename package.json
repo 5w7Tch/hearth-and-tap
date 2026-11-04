@@ -1,0 +1,37 @@
+{
+  "name": "hearth-and-tap",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Booking service (quotes, availability, bookings) for the Hearth & Tap Agentplace agent. MCP + REST.",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "tsx watch src/dev.ts",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit",
+    "db:migrate": "tsx scripts/migrate.ts",
+    "smoke": "tsx scripts/smoke.ts"
+  },
+  "dependencies": {
+    "@hono/swagger-ui": "^0.6.2",
+    "@hono/zod-openapi": "^1.6.3",
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "@neondatabase/serverless": "^1.2.0",
+    "hono": "^4.13.16",
+    "luxon": "^3.7.2",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.15",
+    "@hono/node-server": "^2.1.6",
+    "@types/luxon": "^3.7.6",
+    "@types/node": "^22.20.5",
+    "@vitest/coverage-v8": "^5.1.0",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.0"
+  }
+}
