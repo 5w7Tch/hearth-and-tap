@@ -24,7 +24,10 @@ Customer ⇄ Agentplace agent (Luna) ── custom tool code (Builder-generated)
 **Verified on the published agent:**
 - Gas smell → no booking, emergency number.
 - BR1 1AA radiator → £114–£294 including the £20 travel band, which matches the pricing formula by hand.
-- A full book → look up → cancel journey (HT-Z4ES24). I confirmed the rows in Postgres.
+- A Saturday request is quoted at the Saturday rate straight away: £118.50–£160.50 for a dripping tap, again matching by hand.
+- A date beyond the 14-day booking window is refused, and the nearest real slots are offered.
+- An invalid phone number gets a correction request and no booking. The corrected number resumes the booking.
+- Full book → look up → cancel journeys (HT-Z4ES24, HT-NG62SK), with the rows confirmed in Postgres.
 
 ## Where I hit the platform's limits
 
@@ -38,7 +41,7 @@ Customer ⇄ Agentplace agent (Luna) ── custom tool code (Builder-generated)
 2. **No end-user identity on outbound tool calls.**
    - *What happened:* every request comes from Agentplace's servers, so my API can't tell one customer from another. Per-IP rate limits would throttle all customers at once. I set Vercel's limit deliberately high (120/min per IP), and abuse controls like "max 3 open bookings per customer" are impossible.
    - *How I'd build it:* sign each outbound tool call with a short-lived JWT, issued by Agentplace, carrying the agent ID and an opaque visitor or session ID. Backends can then rate-limit, attribute and authorise per end user without seeing personal data.
-3. **"Luna is free" isn't what the credit counter shows.** Luna was selected for both the Builder and the agent the whole time, yet four Builder runs took the counter from 4,773 to 4,407 (366 credits), including about 80 spent on a run that failed. The Builder itself said Luna's "free pricing has not been independently verified". If these are non-model costs, such as tool execution, previews or builds, the UI should say what was charged.
+3. **"Luna is free" isn't what the credit counter shows.** Luna was selected for both the Builder and the agent the whole time, yet the Builder runs took the counter from 4,773 to 4,144 (629 credits), including about 80 spent on a run that failed. The Builder itself said Luna's "free pricing has not been independently verified". If these are non-model costs, such as tool execution, previews or builds, the UI should say what was charged.
 4. **Builder runs can fail late, with nothing to show.**
    - *What happened:* one 13-minute run showed only "Search files" and made six file reads. It then ended with "The model provider is temporarily unavailable", keeping no partial result.
    - *Workaround:* resending the change as two smaller requests worked (about 18 minutes each).
